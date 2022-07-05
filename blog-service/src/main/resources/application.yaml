@@ -1,0 +1,8 @@
+spring:
+  jpa:
+#    hibernate:
+#      ddl-auto: create
+    show-sql: true
+
+  profiles:
+    include: DB-RESOURCE
