@@ -1,9 +1,9 @@
 = 항해99 Blog-Service 문서
-Andy Wilkinson;
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
 :toc: left
+:toc-title: API 명세서
 :toclevels: 4
 :sectlinks:
 

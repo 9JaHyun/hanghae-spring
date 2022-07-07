@@ -5,7 +5,6 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 2.0.10">
-<meta name="author" content="Andy Wilkinson">
 <title>항해99 Blog-Service 문서</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
@@ -442,17 +441,25 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div id="header">
 <h1>항해99 Blog-Service 문서</h1>
 <div class="details">
-<span id="author" class="author">Andy Wilkinson</span><br>
 <span id="revnumber">version 0.0.1-SNAPSHOT</span>
 </div>
 <div id="toc" class="toc2">
-<div id="toctitle">Table of Contents</div>
+<div id="toctitle">API 명세서</div>
 <ul class="sectlevel0">
 <li><a href="#introduction"><strong>소개</strong></a>
 <ul class="sectlevel1">
 <li><a href="#getting_started_running_the_service"><strong>서비스 실행</strong></a></li>
-<li><a href="#getting_started_creating_a_note"><strong>게시글 작성</strong></a></li>
-<li><a href="#get_all_post"><strong>모든 게시글 조회</strong></a></li>
+<li><a href="#get_post"><strong>게시글 단건 조회</strong></a></li>
+<li><a href="#get_all_post"><strong>모든 게시글 조회</strong></a>
+<ul class="sectlevel2">
+<li><a href="#_curl_request">Curl request</a></li>
+<li><a href="#_http_request">HTTP request</a></li>
+<li><a href="#_http_response">HTTP response</a></li>
+</ul>
+</li>
+<li><a href="#post_posting"><strong>게시글 작성</strong></a></li>
+<li><a href="#put_updatePost"><strong>게시글 수정</strong></a></li>
+<li><a href="#delete_deletePost"><strong>게시글 삭제</strong></a></li>
 </ul>
 </li>
 </ul>
@@ -523,10 +530,10 @@ cURL:</p>
 </div>
 </div>
 <div class="sect1">
-<h2 id="getting_started_creating_a_note"><a class="link" href="#getting_started_creating_a_note"><strong>게시글 작성</strong></a></h2>
+<h2 id="get_post"><a class="link" href="#get_post"><strong>게시글 단건 조회</strong></a></h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>operation::posts-get[snippets='curl-request,path-parameters,request-parameters,response-fields,http-request,http-response']</p>
+<p>operation::singlePost-get[snippets='curl-request,http-request,http-response']</p>
 </div>
 </div>
 </div>
@@ -539,21 +546,53 @@ cURL:</p>
 <div class="paragraph">
 <p>다음과 같이 요청을 보낼 수 있습니다</p>
 </div>
+<div class="sect2">
+<h3 id="_curl_request"><a class="link" href="#_curl_request">Curl request</a></h3>
 <div class="paragraph">
-<p>cURL:
-Unresolved directive in index.adoc - include::{snippets}/posts-get/curl-request.adoc[]</p>
+<p>Unresolved directive in index.adoc - include::{snippets}/posts-get/curl-request.adoc[]</p>
 </div>
 <div class="paragraph">
 <p>정상적으로 작동한다면 <code>200 OK</code> 메시지와 함께 게시들이 메시지 바디에 담겨 반환됩니다.</p>
 </div>
-<div class="paragraph">
-<p>Unresolved directive in index.adoc - include::{snippets}/posts-get/http-response.adoc[]</p>
 </div>
+<div class="sect2">
+<h3 id="_http_request"><a class="link" href="#_http_request">HTTP request</a></h3>
 <div class="paragraph">
-<p>반환되는 객체에 대한 정보는 다음과 같습니다:</p>
+<p>서버에게 게시글을 요청하기 위해 보내는 HTTP MESSAGE는 다음과 같습니다.
+Unresolved directive in index.adoc - include::{snippets}/posts-get/http-request.adoc[]</p>
 </div>
+</div>
+<div class="sect2">
+<h3 id="_http_response"><a class="link" href="#_http_response">HTTP response</a></h3>
 <div class="paragraph">
-<p>Unresolved directive in index.adoc - include::{snippets}/posts-get/response-fields.adoc[]</p>
+<p>반환되는 객체에 대한 정보는 다음과 같습니다:
+Unresolved directive in index.adoc - include::{snippets}/posts-get/http-response.adoc[]
+Unresolved directive in index.adoc - include::{snippets}/posts-get/response-fields.adoc[]</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="post_posting"><a class="link" href="#post_posting"><strong>게시글 작성</strong></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>operation::posts-post[snippets='curl-request,http-request,http-response']</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="put_updatePost"><a class="link" href="#put_updatePost"><strong>게시글 수정</strong></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>operation::posts-update[snippets='curl-request,http-request,http-response']</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="delete_deletePost"><a class="link" href="#delete_deletePost"><strong>게시글 삭제</strong></a></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>operation::posts-delete[snippets='curl-request,http-request,http-response']</p>
 </div>
 </div>
 </div>
@@ -561,7 +600,7 @@ Unresolved directive in index.adoc - include::{snippets}/posts-get/curl-request.
 <div id="footer">
 <div id="footer-text">
 Version 0.0.1-SNAPSHOT<br>
-Last updated 2022-07-07 17:11:14 +0900
+Last updated 2022-07-07 20:07:07 +0900
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css">

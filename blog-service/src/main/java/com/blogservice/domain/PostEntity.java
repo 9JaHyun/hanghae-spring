@@ -8,8 +8,10 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.DynamicUpdate;
 @Data
+@EqualsAndHashCode(callSuper=false)
 @Entity
 @DynamicUpdate
 @Table(name = "post")
