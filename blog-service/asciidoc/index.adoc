@@ -30,6 +30,25 @@ $ git clone https://github.com/9JaHyun/hanghae-spring.git
 [source,bash]
 ----
 $ cd blog-service
+
+----
+
+실행하기 이전에 DataSource를 생성해야 합니다. `application-DB-RESOURCE.yaml` 를
+먼저 `src/main/java/resources` 패키지 안에 생성한 후 DataSource 설정을 완료합시다.:
+
+[source,yaml]
+----
+spring:
+  datasource:
+    driver-class-name:
+    url:
+    username:
+    password:
+----
+
+해당 작업을 모두 완료했다면 빌드를 하면 됩니다.
+[source,bash]
+----
 $ ./gradle package
 $ java -jar target/*.jar
 ----
@@ -47,8 +66,7 @@ format:
 
 [[getting_started_creating_a_note]]
 == *게시글 작성*
-
-
+operation::posts-get[snippets='curl-request,path-parameters,request-parameters,response-fields,http-request,http-response']
 
 
 

@@ -42,12 +42,39 @@ public class PostDocumentationTest {
     void setup(WebApplicationContext webApplicationContext,
           RestDocumentationContextProvider restDocumentation) throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-              .apply(documentationConfiguration(restDocumentation)).build();
+              .apply(documentationConfiguration(restDocumentation))
+              .build();
     }
 
     @DisplayName(value = "전체 게시글 출력 테스트")
     @Test
     void findAllTest() throws Exception {
+        List<PostResponseDto> dtos = new ArrayList<>();
+        dtos.add(new PostResponseDto(1L, "제목1", "글쓴이1", "내용1", LocalDateTime.now(), LocalDateTime.now()));
+        dtos.add(new PostResponseDto(2L, "제목2", "글쓴이2", "내용2", LocalDateTime.now(), LocalDateTime.now()));
+
+        given(postService.findAll("id")).willReturn(dtos);
+
+        this.mockMvc.perform(get("/posts")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .characterEncoding("utf-8"))
+              .andDo(MockMvcResultHandlers.print())
+              .andExpectAll(status().isOk())
+              .andDo(document("posts-get",
+                    responseFields(
+                          fieldWithPath("data").description("게시글 리스트"),
+                          fieldWithPath("data[].id").description("게시글 ID"),
+                          fieldWithPath("data[].title").description("게시글 제목"),
+                          fieldWithPath("data[].author").description("글쓴이"),
+                          fieldWithPath("data[].content").description("내용"),
+                          fieldWithPath("data[].createdAt").description("내용"),
+                          fieldWithPath("data[].updatedAt").description("내용")
+                    )));
+    }
+
+    @DisplayName(value = "전체 게시글 출력 테스트")
+    @Test
+    void postingTest() throws Exception {
         List<PostResponseDto> dtos = new ArrayList<>();
         dtos.add(new PostResponseDto(1L, "제목1", "글쓴이1", "내용1", LocalDateTime.now(), LocalDateTime.now()));
 
