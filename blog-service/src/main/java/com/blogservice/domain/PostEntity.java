@@ -7,8 +7,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import lombok.Getter;
 import org.hibernate.annotations.DynamicUpdate;
-
+@Getter
 @Entity
 @DynamicUpdate
 @Table(name = "post")
@@ -26,4 +27,15 @@ public class PostEntity extends DataHandler{
     private String password;
 
     private String content;
+
+    @Override
+    public String toString() {
+        return "PostEntity{" +
+              "id=" + id +
+              ", title='" + title + '\'' +
+              ", author='" + author + '\'' +
+              ", password='" + password + '\'' +
+              ", content='" + content + '\'' +
+              '}';
+    }
 }

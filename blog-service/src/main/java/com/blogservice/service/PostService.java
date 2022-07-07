@@ -46,6 +46,7 @@ public class PostService {
     public List<PostResponseDto> findAll(String sort) {
         if (sort.contains("_desc")) {
             String keyword = sort.substring(0, sort.indexOf("_desc"));
+            System.out.println(postRepository.findAll(Sort.by(Order.desc(keyword))));
             return postRepository.findAll(Sort.by(Order.desc(keyword))).stream()
                   .map(entity -> mapper.map(entity, PostResponseDto.class))
                   .collect(Collectors.toList());

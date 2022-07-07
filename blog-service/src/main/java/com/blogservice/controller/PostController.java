@@ -54,12 +54,12 @@ public class PostController {
           @RequestParam(name = "s", defaultValue = "id") String sort) {
 
         List<PostResponseDto> posts = postService.findAll(sort);
-//
-//        if (posts.size() == 0) {
-//            return ResponseEntity
-//                  .status(HttpStatus.NO_CONTENT)
-//                  .body(null);
-//        }
+
+        if (posts.size() == 0) {
+            return ResponseEntity
+                  .status(HttpStatus.NO_CONTENT)
+                  .body(null);
+        }
         return ResponseEntity
               .status(HttpStatus.OK)
               .contentType(MediaType.APPLICATION_JSON)
