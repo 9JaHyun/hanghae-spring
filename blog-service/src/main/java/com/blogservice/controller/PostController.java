@@ -27,11 +27,6 @@ public class PostController {
         this.postService = postService;
     }
 
-    @GetMapping("/")
-    public String welcome() {
-        return "hello";
-    }
-
     @PostMapping("/posts")
     public ResponseEntity<PostResponseDto> posting(@RequestBody PostCreateRequestDto dto) {
         PostResponseDto response = postService.posting(dto);
@@ -55,20 +50,20 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-    public ResponseEntity<List<PostResponseDto>> findAllPosts(
+    public ResponseEntity<Result<List<PostResponseDto>>> findAllPosts(
           @RequestParam(name = "s", defaultValue = "id") String sort) {
 
         List<PostResponseDto> posts = postService.findAll(sort);
-
-        if (posts.size() == 0) {
-            return ResponseEntity
-                  .status(HttpStatus.NO_CONTENT)
-                  .body(null);
-        }
+//
+//        if (posts.size() == 0) {
+//            return ResponseEntity
+//                  .status(HttpStatus.NO_CONTENT)
+//                  .body(null);
+//        }
         return ResponseEntity
               .status(HttpStatus.OK)
               .contentType(MediaType.APPLICATION_JSON)
-              .body(posts);
+              .body(new Result<List<PostResponseDto>>(posts));
     }
 
     @GetMapping("/post")

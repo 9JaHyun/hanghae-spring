@@ -1,0 +1,70 @@
+= 항해99 Blog-Service 문서
+Andy Wilkinson;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+
+[[introduction]]
+= *소개*
+항해99 스프링 입문 파트 개인 과제인 Blog-Service에 대한 API 문서입니다.
+
+
+[[getting_started_running_the_service]]
+== *서비스 실행*
+해당 문서는 https://projects.spring.io/spring-boot[Spring Boot] 를 통해 작성이 되어졌습니다.
+이를 통해 더 쉬운 API 사용이 가능해집니다!
+
+첫번째로는 Git repository를 Clone 해야 합니다:
+
+[source,bash]
+----
+$ git clone https://github.com/9JaHyun/hanghae-spring.git
+----
+
+해당 Repository는 항해 스프링 입문, 숙련, 심화 과정의 과제를 모두 모아놓았기 때문에
+입문 과정의 `blog-service` 로 이동해서 실행을 해야 합니다:
+
+[source,bash]
+----
+$ cd blog-service
+$ ./gradle package
+$ java -jar target/*.jar
+----
+
+You can check that the service is up and running by executing a simple request using
+cURL:
+
+
+다음 요청들은 다음 포멧에 맞는 응답을 생성합니다.
+https://github.com/mikekelly/hal_specification[Hypertext Application Language (HAL)]
+format:
+
+
+
+
+[[getting_started_creating_a_note]]
+== *게시글 작성*
+
+
+
+
+
+[[get_all_post]]
+== *모든 게시글 조회*
+블로그에 있는 모든 게시글을 `GET` 요청합니다.
+
+다음과 같이 요청을 보낼 수 있습니다
+
+cURL:
+include::{snippets}/posts-get/curl-request.adoc[]
+
+정상적으로 작동한다면 `200 OK` 메시지와 함께 게시들이 메시지 바디에 담겨 반환됩니다.
+
+include::{snippets}/posts-get/http-response.adoc[]
+
+반환되는 객체에 대한 정보는 다음과 같습니다:
+
+include::{snippets}/posts-get/response-fields.adoc[]

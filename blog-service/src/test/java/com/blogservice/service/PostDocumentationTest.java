@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.blogservice.controller.PostController;
 import com.blogservice.controller.dto.PostResponseDto;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,6 +49,7 @@ public class PostDocumentationTest {
     @Test
     void findAllTest() throws Exception {
         List<PostResponseDto> dtos = new ArrayList<>();
+        dtos.add(new PostResponseDto(1L, "제목1", "글쓴이1", "내용1", LocalDateTime.now(), LocalDateTime.now()));
 
         given(postService.findAll("id")).willReturn(dtos);
 
@@ -55,14 +57,16 @@ public class PostDocumentationTest {
                     .contentType(MediaType.APPLICATION_JSON)
                     .characterEncoding("utf-8"))
               .andDo(MockMvcResultHandlers.print())
-              .andExpectAll(status().isOk(), status().isNoContent())
+              .andExpectAll(status().isOk())
               .andDo(document("posts-get",
                     responseFields(
-                          fieldWithPath("[]").description("게시글 리스트"),
-                          fieldWithPath("[].id").description("게시글 ID"),
-                          fieldWithPath("[].title").description("게시글 제목"),
-                          fieldWithPath("[].author").description("글쓴이"),
-                          fieldWithPath("[].content").description("내용")
+                          fieldWithPath("data").description("게시글 리스트"),
+                          fieldWithPath("data[].id").description("게시글 ID"),
+                          fieldWithPath("data[].title").description("게시글 제목"),
+                          fieldWithPath("data[].author").description("글쓴이"),
+                          fieldWithPath("data[].content").description("내용"),
+                          fieldWithPath("data[].createdAt").description("내용"),
+                          fieldWithPath("data[].updatedAt").description("내용")
                     )));
     }
 }
