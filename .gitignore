@@ -40,5 +40,13 @@ out/
 
 ### properties
 /**/src/main/resources/application-*.yaml
+/**/src/test/resources/application-*.yaml
 
 hanghae99-spring.iml
+# Ignore Gradle project-specific cache directory
+.gradle/
+gradle/
+
+# Ignore Gradle build output directory
+build
+
