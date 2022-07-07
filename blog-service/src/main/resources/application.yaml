@@ -4,6 +4,6 @@ spring:
 #      ddl-auto: create
     show-sql: true
 
+# java -jar 파라미터 바인딩
   profiles:
     include: DB-RESOURCE
-

@@ -1,9 +1,11 @@
 package com.blogservice.service;
 
 import com.blogservice.controller.dto.PostCreateRequestDto;
+import com.blogservice.controller.dto.PostDeleteRequestDto;
 import com.blogservice.controller.dto.PostResponseDto;
 import com.blogservice.controller.dto.PostUpdateRequestDto;
 import com.blogservice.domain.PostEntity;
+import com.blogservice.exception.IllegalPostPasswordException;
 import com.blogservice.repository.PostRepository;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +29,9 @@ public class PostService {
 
     @Transactional
     public PostResponseDto posting(PostCreateRequestDto dto) {
+        System.out.println(dto);
         PostEntity postEntity = mapper.map(dto, PostEntity.class);
+        System.out.println(postEntity);
         postRepository.save(postEntity);
 
         return mapper.map(postEntity, PostResponseDto.class);
@@ -39,14 +43,13 @@ public class PostService {
         if (entity != null) {
             return mapper.map(entity, PostResponseDto.class);
         } else {
-            throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
+            throw new IllegalPostPasswordException("패스워드가 일치하지 않습니다.");
         }
     }
 
     public List<PostResponseDto> findAll(String sort) {
         if (sort.contains("_desc")) {
             String keyword = sort.substring(0, sort.indexOf("_desc"));
-            System.out.println(postRepository.findAll(Sort.by(Order.desc(keyword))));
             return postRepository.findAll(Sort.by(Order.desc(keyword))).stream()
                   .map(entity -> mapper.map(entity, PostResponseDto.class))
                   .collect(Collectors.toList());
@@ -59,14 +62,19 @@ public class PostService {
     public PostResponseDto findById(Long id) {
         PostEntity postEntity = postRepository
               .findById(id)
-              .orElseThrow(() -> new IllegalArgumentException("적절하지 않은 id 입니다."));
+              .orElseThrow(() -> new IllegalArgumentException("없는 게시글입니다."));
 
         mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
         return mapper.map(postEntity, PostResponseDto.class);
     }
 
     @Transactional
-    public void delete(Long id) {
-        postRepository.deleteById(id);
+    public void delete(PostDeleteRequestDto dto) {
+        PostEntity entity = postRepository.findByIdAndPassword(dto.getId(), dto.getPassword());
+        if (entity != null) {
+            postRepository.deleteById(dto.getId());
+        } else {
+            throw new IllegalPostPasswordException("패스워드가 일치하지 않습니다.");
+        }
     }
 }

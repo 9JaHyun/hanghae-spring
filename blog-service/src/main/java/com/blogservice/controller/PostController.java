@@ -1,6 +1,7 @@
 package com.blogservice.controller;
 
 import com.blogservice.controller.dto.PostCreateRequestDto;
+import com.blogservice.controller.dto.PostDeleteRequestDto;
 import com.blogservice.controller.dto.PostResponseDto;
 import com.blogservice.controller.dto.PostUpdateRequestDto;
 import com.blogservice.service.PostService;
@@ -39,14 +40,9 @@ public class PostController {
     @PutMapping("/posts")
     public ResponseEntity<PostResponseDto> updatePost(@RequestBody PostUpdateRequestDto dto) {
         PostResponseDto postResponseDto = postService.updatePost(dto);
-        if (postResponseDto != null) {
-            return ResponseEntity.status(HttpStatus.OK)
-                  .contentType(MediaType.APPLICATION_JSON)
-                  .body(postResponseDto);
-        }
-
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-              .body(null);
+        return ResponseEntity.status(HttpStatus.OK)
+              .contentType(MediaType.APPLICATION_JSON)
+              .body(postResponseDto);
     }
 
     @GetMapping("/posts")
@@ -67,7 +63,7 @@ public class PostController {
     }
 
     @GetMapping("/post")
-    public ResponseEntity<PostResponseDto> findPostById(@RequestParam Long id) {
+    public ResponseEntity<PostResponseDto> findPostById(@RequestParam(name = "id") Long id) {
         PostResponseDto post = postService.findById(id);
 
         return ResponseEntity
@@ -76,9 +72,9 @@ public class PostController {
               .body(post);
     }
 
-    @DeleteMapping("/posts/")
-    public ResponseEntity<String> deletePost(@RequestBody Long id) {
-        postService.delete(id);
+    @DeleteMapping("/posts")
+    public ResponseEntity<String> deletePost(@RequestBody PostDeleteRequestDto dto) {
+        postService.delete(dto);
 
         return ResponseEntity
               .status(HttpStatus.NO_CONTENT)
@@ -88,6 +84,7 @@ public class PostController {
     @Data
     @AllArgsConstructor
     static class Result<T> {
+
         private T data;
     }
 }
