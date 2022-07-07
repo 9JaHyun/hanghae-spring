@@ -3,14 +3,12 @@ package com.blogservice.controller;
 import com.blogservice.controller.dto.PostCreateRequestDto;
 import com.blogservice.controller.dto.PostResponseDto;
 import com.blogservice.controller.dto.PostUpdateRequestDto;
-import com.blogservice.domain.Post;
-import com.blogservice.domain.PostEntity;
 import com.blogservice.service.PostService;
-import java.util.ArrayList;
 import java.util.List;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,27 +34,20 @@ public class PostController {
 
     @PostMapping("/posts")
     public ResponseEntity<PostResponseDto> posting(@RequestBody PostCreateRequestDto dto) {
-        System.out.println(dto);
         PostResponseDto response = postService.posting(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
+              .contentType(MediaType.APPLICATION_JSON)
               .body(response);
     }
 
     // 서비스로 내려보내자.
     @PutMapping("/posts")
-    public ResponseEntity<Post> updatePost(@RequestBody PostUpdateRequestDto dto) {
-        PostEntity findEntity = postService.findById(dto.getId());
-        if (findEntity.getPassword().equals(dto.getPassword())) {
-            findEntity.setTitle(dto.getTitle());
-            findEntity.setContent(dto.getContent());
-            postService.updatePost(findEntity);
-
-            ModelMapper mapper = new ModelMapper();
-            mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-            Post post = mapper.map(findEntity, Post.class);
-
+    public ResponseEntity<PostResponseDto> updatePost(@RequestBody PostUpdateRequestDto dto) {
+        PostResponseDto postResponseDto = postService.updatePost(dto);
+        if (postResponseDto != null) {
             return ResponseEntity.status(HttpStatus.OK)
-                  .body(post);
+                  .contentType(MediaType.APPLICATION_JSON)
+                  .body(postResponseDto);
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -64,35 +55,29 @@ public class PostController {
     }
 
     @GetMapping("/posts")
-        public ResponseEntity<List<Post>> posts(@RequestParam(name = "sort", defaultValue = "id") String sort) {
-            List<PostEntity> postEntities = null;
-            if (sort.equals("id")) {
-                postEntities = postService.findAll();
-            }
+    public ResponseEntity<List<PostResponseDto>> findAllPosts(
+          @RequestParam(name = "s", defaultValue = "id") String sort) {
 
-            if (sort.equals("createdAt")) {
-                postEntities = postService.findAll();
-            }
+        List<PostResponseDto> posts = postService.findAll(sort);
 
-            ModelMapper mapper = new ModelMapper();
-            List<Post> posts = new ArrayList<>();
-
-            postEntities.forEach(p -> posts.add(mapper.map(p, Post.class)));
-
+        if (posts.size() == 0) {
             return ResponseEntity
+                  .status(HttpStatus.NO_CONTENT)
+                  .body(null);
+        }
+        return ResponseEntity
               .status(HttpStatus.OK)
+              .contentType(MediaType.APPLICATION_JSON)
               .body(posts);
     }
 
     @GetMapping("/post")
-    public ResponseEntity<Post> post(@RequestParam Long id) {
-        PostEntity postEntity = postService.findById(id);
-
-        ModelMapper mapper = new ModelMapper();
-        Post post = mapper.map(postEntity, Post.class);
+    public ResponseEntity<PostResponseDto> findPostById(@RequestParam Long id) {
+        PostResponseDto post = postService.findById(id);
 
         return ResponseEntity
               .status(HttpStatus.OK)
+              .contentType(MediaType.APPLICATION_JSON)
               .body(post);
     }
 
@@ -101,8 +86,13 @@ public class PostController {
         postService.delete(id);
 
         return ResponseEntity
-              .status(HttpStatus.OK)
+              .status(HttpStatus.NO_CONTENT)
               .body("Delete Done");
     }
 
+    @Data
+    @AllArgsConstructor
+    static class Result<T> {
+        private T data;
+    }
 }

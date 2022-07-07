@@ -6,3 +6,4 @@ spring:
 
   profiles:
     include: DB-RESOURCE
+

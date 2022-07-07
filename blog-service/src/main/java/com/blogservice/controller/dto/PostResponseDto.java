@@ -2,14 +2,16 @@ package com.blogservice.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import java.time.LocalDateTime;
 import lombok.Data;
 
 @Data
 @JsonInclude(Include.NON_NULL)
 public class PostResponseDto {
-
-    private Long postId;
+    private Long id;
     private String title;
+    private String author;
     private String content;
-    private String password;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

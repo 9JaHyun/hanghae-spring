@@ -2,49 +2,69 @@ package com.blogservice.service;
 
 import com.blogservice.controller.dto.PostCreateRequestDto;
 import com.blogservice.controller.dto.PostResponseDto;
+import com.blogservice.controller.dto.PostUpdateRequestDto;
 import com.blogservice.domain.PostEntity;
 import com.blogservice.repository.PostRepository;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PostService {
 
     private final PostRepository postRepository;
+    private final ModelMapper mapper;
 
-    public PostService(PostRepository postRepository) {
+    public PostService(PostRepository postRepository, ModelMapper mapper) {
         this.postRepository = postRepository;
+        this.mapper = mapper;
     }
 
+    @Transactional
     public PostResponseDto posting(PostCreateRequestDto dto) {
-        ModelMapper mapper = new ModelMapper();
-        PostEntity entity = mapper.map(dto, PostEntity.class);
+        PostEntity postEntity = mapper.map(dto, PostEntity.class);
+        postRepository.save(postEntity);
 
-        postRepository.save(entity);
-
-        return mapper.map(entity, PostResponseDto.class);
+        return mapper.map(postEntity, PostResponseDto.class);
     }
 
-    // 방법2. 전체 가져와서 Service Layer에서 정렬하기
-//    public List<PostEntity> findPostSortByCreatedAt() {
-//        return postRepository.findAll();
-//    }
-
-    public void updatePost(PostEntity post) {
-        postRepository.save(post);
+    @Transactional
+    public PostResponseDto updatePost(PostUpdateRequestDto dto) {
+        PostEntity entity = postRepository.findByIdAndPassword(dto.getId(), dto.getPassword());
+        if (entity != null) {
+            return mapper.map(entity, PostResponseDto.class);
+        } else {
+            throw new IllegalArgumentException("패스워드가 일치하지 않습니다.");
+        }
     }
 
-    public List<PostEntity> findAll() {
-        return postRepository.findAll();
+    public List<PostResponseDto> findAll(String sort) {
+        if (sort.contains("_desc")) {
+            String keyword = sort.substring(0, sort.indexOf("_desc"));
+            return postRepository.findAll(Sort.by(Order.desc(keyword))).stream()
+                  .map(entity -> mapper.map(entity, PostResponseDto.class))
+                  .collect(Collectors.toList());
+        }
+        return postRepository.findAll(Sort.by(sort)).stream()
+              .map(entity -> mapper.map(entity, PostResponseDto.class))
+              .collect(Collectors.toList());
     }
 
-    public PostEntity findById(Long id) {
-        return postRepository
+    public PostResponseDto findById(Long id) {
+        PostEntity postEntity = postRepository
               .findById(id)
               .orElseThrow(() -> new IllegalArgumentException("적절하지 않은 id 입니다."));
+
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        return mapper.map(postEntity, PostResponseDto.class);
     }
 
+    @Transactional
     public void delete(Long id) {
         postRepository.deleteById(id);
     }
